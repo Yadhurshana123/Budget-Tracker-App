@@ -1,0 +1,99 @@
+.expCard {
+  margin-bottom: 14px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.expHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.expHeader:hover { background: var(--bg); }
+
+.expDate {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 15px;
+}
+
+.expTotal {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary-light);
+}
+
+.expBody {
+  border-top: 1.5px solid var(--border);
+  padding: 20px 24px;
+  background: #fafcff;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+}
+.table th {
+  background: var(--primary);
+  color: white;
+  padding: 9px 12px;
+  text-align: left;
+  font-size: 13px;
+}
+.table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+.table tbody tr:hover { background: var(--bg); }
+
+.editRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.perHeadEditSection {
+  margin-top: 4px;
+}
+
+.perHeadEditBlock {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 12px 14px;
+  margin-bottom: 12px;
+}
+
+.perHeadEditTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.perHeadEditLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 200px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.perHeadEditSelect {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  background: white;
+  color: var(--text);
+}

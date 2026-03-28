@@ -1,0 +1,113 @@
+.itemsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 15px;
+}
+
+.itemRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.itemNum {
+  font-weight: 700;
+  color: var(--primary-light);
+  font-size: 14px;
+  min-width: 20px;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 2px solid var(--border);
+  margin-top: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.table th {
+  background: var(--primary);
+  color: white;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 13px;
+}
+
+.table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.table tbody tr:hover { background: var(--bg); }
+
+.summaryActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.perHeadSection {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 2px solid var(--border);
+}
+
+.perHeadHint {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.45;
+}
+
+.perHeadBlock {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 14px 16px;
+  margin-bottom: 14px;
+}
+
+.perHeadBlockTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.perHeadLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 200px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.perHeadSelect {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  background: white;
+  color: var(--text);
+}

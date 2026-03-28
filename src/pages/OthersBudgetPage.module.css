@@ -1,0 +1,161 @@
+.userSection {
+  margin-bottom: 28px;
+}
+
+.userHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--white);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+
+.userAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.userName {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  flex: 1;
+}
+
+.userTotal {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-light);
+}
+
+.expCard {
+  margin-bottom: 10px;
+  padding: 0;
+  margin-left: 16px;
+  overflow: hidden;
+}
+
+.expHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 22px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.expHeader:hover { background: var(--bg); }
+
+.expDate {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 14px;
+}
+
+.itemCount {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-left: 10px;
+}
+
+.expTotal {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-light);
+}
+
+.expBody {
+  border-top: 1.5px solid var(--border);
+  padding: 18px 22px;
+  background: #fafcff;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+.table th {
+  background: var(--primary);
+  color: white;
+  padding: 9px 12px;
+  text-align: left;
+  font-size: 13px;
+}
+.table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.commentsSection {
+  border-top: 1.5px solid var(--border);
+  padding-top: 16px;
+}
+
+.commentsTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+.commentsList {
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.commentBubble {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 8px 12px;
+  max-width: 90%;
+}
+
+.mine {
+  background: #e8f0fb;
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.commentUser {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  min-width: 50px;
+}
+
+.commentMsg {
+  font-size: 13px;
+  color: var(--text);
+  flex: 1;
+}
+
+.commentTime {
+  font-size: 11px;
+  color: var(--text-light);
+  white-space: nowrap;
+  align-self: flex-end;
+}
+
+.commentInput {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
