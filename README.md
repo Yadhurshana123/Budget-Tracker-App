@@ -24,17 +24,9 @@ npm install
 cp .env.example .env
 ```
 
-Edit `.env` and paste your Supabase credentials:
-```
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key-here
-```
-
 ### 3. Run the App
 ```bash
 npm run dev
-```
-Open [http://localhost:5173](http://localhost:5173)
 
 ---
 
