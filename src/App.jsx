@@ -6,6 +6,7 @@ import PastHistoryPage from './pages/PastHistoryPage'
 import OthersBudgetPage from './pages/OthersBudgetPage'
 import ChangePasswordPage from './pages/ChangePasswordPage'
 import ProfilePage from './pages/ProfilePage'
+import AllocatedToMePage from './pages/AllocatedToMePage'
 
 function PrivateRoute({ children }) {
   const user = localStorage.getItem('homies_user')
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/add-budget" element={<PrivateRoute><AddBudgetPage /></PrivateRoute>} />
         <Route path="/history" element={<PrivateRoute><PastHistoryPage /></PrivateRoute>} />
         <Route path="/others" element={<PrivateRoute><OthersBudgetPage /></PrivateRoute>} />
+        <Route path="/allocated-to-me" element={<PrivateRoute><AllocatedToMePage /></PrivateRoute>} />
         <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

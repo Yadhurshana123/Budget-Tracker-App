@@ -85,6 +85,7 @@ export default function OthersBudgetPage() {
       .from('expenses')
       .select('*, expense_items(*), expense_per_head_items(*), users(username)')
       .eq('is_confirmed', true)
+      .neq('user_id', user.id)
       .order('date', { ascending: false })
     setExpenses(data || [])
     setLoading(false)
