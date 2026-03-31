@@ -38,17 +38,6 @@ Open [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## 👥 Default Users
-| Username | Default Password | Note |
-|----------|-----------------|------|
-| You | pass123 | Change on first login |
-| Friend | pass123 | Change on first login |
-| Akka | pass123 | Change on first login |
-
-> You can change usernames in `supabase_setup.sql` before running.
-
----
-
 ## 📁 Project Structure
 ```
 src/
