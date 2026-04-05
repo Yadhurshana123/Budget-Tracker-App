@@ -187,6 +187,15 @@ export default function AddBudgetPage() {
         if (phErr) throw phErr
       }
 
+      // ── Notify other members about this budget action ──────────────────────
+      await supabase.from('budget_notifications').insert({
+        actor_user_id: user.id,
+        expense_id: expenseId,
+        action: editId ? 'edited' : 'added',
+        expense_date: date,
+        total_amount: expenseTotal,
+      })
+
       setSuccess(true)
       setTimeout(() => navigate('/history'), 1800)
     } catch (err) {

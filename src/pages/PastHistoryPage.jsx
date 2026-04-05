@@ -114,10 +114,21 @@ export default function PastHistoryPage() {
                       onClick={async (e) => {
                         e.stopPropagation();
                         if (window.confirm('Are you sure you want to delete this budget?')) {
+                          // Capture info before deletion (row will be gone after)
+                          const expDate = exp.date
+                          const expTotal = exp.total_amount
                           const { error } = await supabase.from('expenses').delete().eq('id', exp.id);
                           if (error) {
                             alert('Delete failed: ' + error.message);
                           } else {
+                            // Notify other members about the deletion
+                            await supabase.from('budget_notifications').insert({
+                              actor_user_id: user.id,
+                              expense_id: null,
+                              action: 'deleted',
+                              expense_date: expDate,
+                              total_amount: expTotal,
+                            })
                             setExpenses(prev => prev.filter(item => item.id !== exp.id));
                           }
                         }
