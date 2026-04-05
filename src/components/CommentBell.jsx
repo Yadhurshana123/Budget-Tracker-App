@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../supabaseClient'
+import { supabase } from '../js/supabaseClient'
 import {
   getLastCommentSeenIso,
   initLastCommentSeenIfMissing,
   markAllCommentsSeen,
-} from '../commentNotificationStorage'
+} from '../js/commentNotificationStorage'
 import styles from './CommentBell.module.css'
 
 function showDesktopNotification(title, body, tag) {

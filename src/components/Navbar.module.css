@@ -53,3 +53,35 @@
 .logoutBtn:hover {
   background: rgba(255,255,255,0.25);
 }
+
+.brandLong { display: inline; }
+.brandShort { display: none; }
+
+@media (max-width: 600px) {
+  .navbar {
+    padding: 0 8px;
+    height: 52px;
+  }
+  .brand {
+    font-size: 14px;
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow: visible;
+    max-width: none;
+  }
+  .brandLong { display: none; }
+  .brandShort { display: inline; }
+  .right {
+    gap: 4px;
+  }
+  .profileBtn {
+    padding: 5px 6px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .logoutBtn {
+    padding: 5px 6px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+}

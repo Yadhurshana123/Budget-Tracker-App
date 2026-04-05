@@ -7,7 +7,7 @@ export const emptyPerHeadBlock = () => ({
 
 export function qtyToDb(raw) {
   const s = String(raw ?? '').trim()
-  return s === '' ? null : parseInt(s, 10)
+  return s === '' ? null : s
 }
 
 export function validateLineItem(item, errorPrefix) {
@@ -15,12 +15,7 @@ export function validateLineItem(item, errorPrefix) {
     return errorPrefix ? `${errorPrefix}Each product needs a name.` : 'All items need a product name.'
   }
   const qStr = String(item.quantity ?? '').trim()
-  if (qStr !== '') {
-    const q = parseInt(qStr, 10)
-    if (Number.isNaN(q) || q <= 0) {
-      return errorPrefix ? `${errorPrefix}Quantity must be a positive whole number, or leave it blank.` : 'Quantity must be a positive whole number, or leave it blank.'
-    }
-  }
+  // No strict quantity validation anymore (strings allowed)
   if (!item.amount || isNaN(item.amount) || Number(item.amount) <= 0) {
     return errorPrefix ? `${errorPrefix}Enter a valid amount for each product.` : 'Enter valid amount for all items.'
   }

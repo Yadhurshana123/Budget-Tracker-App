@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import styles from './DashboardPage.module.css'
 
 const menuItems = [
-  { icon: '➕', label: 'Add Today Budget', desc: 'Add your daily expenses', path: '/add-budget', color: '#1E3A5F' },
+  { icon: '➕', label: 'Add Budget', desc: 'Add your expenses', path: '/add-budget', color: '#1E3A5F' },
   { icon: '📋', label: 'View Past History', desc: 'See your past entries', path: '/history', color: '#2E6DA4' },
   { icon: '👀', label: "View Homies' Budgets", desc: 'See what your crew spent', path: '/others', color: '#4A90D9' },
   { icon: '🎁', label: 'Allocated To Me', desc: 'See what homies bought for you', path: '/allocated-to-me', color: '#16a085' },

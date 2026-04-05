@@ -14,7 +14,8 @@ export default function Navbar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.brand} onClick={() => navigate('/')}>
-        💰 Homies Budget App
+        <span className={styles.brandLong}>💰 Homies Budget App</span>
+        <span className={styles.brandShort}>💰 Homies</span>
       </div>
       <div className={styles.right}>
         <CommentBell />

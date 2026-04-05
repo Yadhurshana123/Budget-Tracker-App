@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../supabaseClient'
+import { supabase } from '../js/supabaseClient'
 import Navbar from '../components/Navbar'
 import styles from './OthersBudgetPage.module.css'
-import { formatLkr } from '../formatMoney'
+import { formatLkr } from '../js/formatMoney'
 
 export default function AllocatedToMePage() {
   const navigate = useNavigate()
@@ -106,19 +106,21 @@ export default function AllocatedToMePage() {
 
                 {expanded === exp.id && (
                   <div className={styles.expBody}>
-                    <table className={styles.table}>
-                      <thead><tr><th>#</th><th>Product</th><th>Qty</th><th>Amount (Rs.)</th></tr></thead>
-                      <tbody>
-                        {exp.expense_per_head_items.map((item, idx) => (
-                          <tr key={item.id}>
-                            <td>{idx + 1}</td>
-                            <td>{item.product_name}</td>
-                            <td>{item.quantity == null || item.quantity === '' ? '—' : item.quantity}</td>
-                            <td>{formatLkr(item.amount)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                    <div className={styles.tableWrapper}>
+                      <table className={styles.table}>
+                        <thead><tr><th>#</th><th>Product</th><th>Qty</th><th>Amount (Rs.)</th></tr></thead>
+                        <tbody>
+                          {exp.expense_per_head_items.map((item, idx) => (
+                            <tr key={item.id}>
+                              <td>{idx + 1}</td>
+                              <td>{item.product_name}</td>
+                              <td>{item.quantity == null || item.quantity === '' ? '—' : item.quantity}</td>
+                              <td>{formatLkr(item.amount)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 )}
               </div>

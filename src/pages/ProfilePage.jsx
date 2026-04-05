@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../supabaseClient'
+import { supabase } from '../js/supabaseClient'
 import Navbar from '../components/Navbar'
 import styles from './ProfilePage.module.css'
-import { formatLkr } from '../formatMoney'
+import { formatLkr } from '../js/formatMoney'
 
 function calendarDaysInclusive(isoDate1, isoDate2) {
   if (!isoDate1 || !isoDate2) return 0

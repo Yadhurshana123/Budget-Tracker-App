@@ -159,3 +159,55 @@
   gap: 10px;
   align-items: center;
 }
+@media (max-width: 600px) {
+  .userHeader {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  .userAvatar {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+  .userName {
+    font-size: 14px;
+  }
+  .userTotal {
+    font-size: 12px;
+  }
+  .expCard {
+    margin-left: 8px;
+  }
+  .expHeader {
+    padding: 12px 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .expDate {
+    font-size: 13px;
+  }
+  .expTotal {
+    font-size: 14px;
+  }
+  .expBody {
+    padding: 12px 14px;
+  }
+  .tableWrapper {
+    overflow-x: auto;
+    margin: 0 -14px;
+    padding: 0 14px;
+  }
+  .table {
+    min-width: 450px;
+    margin-bottom: 12px;
+  }
+  .commentInput {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .commentInput button {
+    width: 100%;
+  }
+}

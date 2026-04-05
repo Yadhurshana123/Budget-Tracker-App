@@ -21,6 +21,7 @@ export default function App() {
         <Route path="/change-password" element={<ChangePasswordPage />} />
         <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
         <Route path="/add-budget" element={<PrivateRoute><AddBudgetPage /></PrivateRoute>} />
+        <Route path="/edit-budget/:id" element={<PrivateRoute><AddBudgetPage /></PrivateRoute>} />
         <Route path="/history" element={<PrivateRoute><PastHistoryPage /></PrivateRoute>} />
         <Route path="/others" element={<PrivateRoute><OthersBudgetPage /></PrivateRoute>} />
         <Route path="/allocated-to-me" element={<PrivateRoute><AllocatedToMePage /></PrivateRoute>} />

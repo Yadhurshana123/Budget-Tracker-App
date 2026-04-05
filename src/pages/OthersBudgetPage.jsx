@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { supabase } from '../supabaseClient'
+import { supabase } from '../js/supabaseClient'
 import Navbar from '../components/Navbar'
 import styles from './OthersBudgetPage.module.css'
-import { formatLkr } from '../formatMoney'
+import { formatLkr } from '../js/formatMoney'
 
 function groupPerHeadItems(rows, userMap) {
   const order = []
@@ -176,19 +176,21 @@ export default function OthersBudgetPage() {
 
                 {expanded === exp.id && (
                   <div className={styles.expBody}>
-                    <table className={styles.table}>
-                      <thead><tr><th>#</th><th>Product</th><th>Qty</th><th>Amount (Rs.)</th></tr></thead>
-                      <tbody>
-                        {exp.expense_items?.map((item, idx) => (
-                          <tr key={item.id}>
-                            <td>{idx + 1}</td>
-                            <td>{item.product_name}</td>
-                            <td>{item.quantity == null || item.quantity === '' ? '—' : item.quantity}</td>
-                            <td>{formatLkr(item.amount)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                    <div className={styles.tableWrapper}>
+                      <table className={styles.table}>
+                        <thead><tr><th>#</th><th>Product</th><th>Qty</th><th>Amount (Rs.)</th></tr></thead>
+                        <tbody>
+                          {exp.expense_items?.map((item, idx) => (
+                            <tr key={item.id}>
+                              <td>{idx + 1}</td>
+                              <td>{item.product_name}</td>
+                              <td>{item.quantity == null || item.quantity === '' ? '—' : item.quantity}</td>
+                              <td>{formatLkr(item.amount)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
 
                     {perHeadGroups.length > 0 && (
                       <div style={{ marginTop: 20 }}>
@@ -196,19 +198,21 @@ export default function OthersBudgetPage() {
                         {perHeadGroups.map((g) => (
                           <div key={g.for_user_id} style={{ marginBottom: 16 }}>
                             <p style={{ fontWeight: 700, margin: '0 0 8px', color: 'var(--primary-light)', fontSize: 14 }}>{g.name}</p>
-                            <table className={styles.table}>
-                              <thead><tr><th>#</th><th>Product</th><th>Qty</th><th>Amount (Rs.)</th></tr></thead>
-                              <tbody>
-                                {g.items.map((item, idx) => (
-                                  <tr key={item.id}>
-                                    <td>{idx + 1}</td>
-                                    <td>{item.product_name}</td>
-                                    <td>{item.quantity == null || item.quantity === '' ? '—' : item.quantity}</td>
-                                    <td>{formatLkr(item.amount)}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
+                            <div className={styles.tableWrapper}>
+                              <table className={styles.table}>
+                                <thead><tr><th>#</th><th>Product</th><th>Qty</th><th>Amount (Rs.)</th></tr></thead>
+                                <tbody>
+                                  {g.items.map((item, idx) => (
+                                    <tr key={item.id}>
+                                      <td>{idx + 1}</td>
+                                      <td>{item.product_name}</td>
+                                      <td>{item.quantity == null || item.quantity === '' ? '—' : item.quantity}</td>
+                                      <td>{formatLkr(item.amount)}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
                         ))}
                       </div>

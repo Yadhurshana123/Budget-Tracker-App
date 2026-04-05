@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../supabaseClient'
+import { supabase } from '../js/supabaseClient'
 import Navbar from '../components/Navbar'
 import styles from './PastHistoryPage.module.css'
 
-import { formatLkr } from '../formatMoney'
+import { formatLkr } from '../js/formatMoney'
 
 function groupPerHeadItems(rows, userMap) {
   const order = []
@@ -97,48 +97,81 @@ export default function PastHistoryPage() {
 
               {expanded === exp.id && (
                 <div className={styles.expBody}>
-                      <table className={styles.table}>
-                        <thead><tr><th>#</th><th>Product</th><th>Qty</th><th>Amount (Rs.)</th></tr></thead>
-                        <tbody>
-                          {mainRows.length === 0 ? (
-                            <tr><td colSpan={4} style={{ color: 'var(--text-light)', fontStyle: 'italic' }}>No main items (per head only)</td></tr>
-                          ) : (
-                            mainRows.map((item, idx) => (
-                              <tr key={item.id}>
-                                <td>{idx + 1}</td>
-                                <td>{item.product_name}</td>
-                                <td>{item.quantity == null || item.quantity === '' ? '—' : item.quantity}</td>
-                                <td>{formatLkr(item.amount)}</td>
-                              </tr>
-                            ))
-                          )}
-                        </tbody>
-                        <tfoot>
-                          <tr>
-                            <td colSpan={3} style={{ fontWeight: 700, color: 'var(--primary)', textAlign: 'right' }}>Total</td>
-                            <td style={{ fontWeight: 700, color: 'var(--primary)' }}>{formatLkr(exp.total_amount)}</td>
-                          </tr>
-                        </tfoot>
-                      </table>
+                  <div className={styles.editRow}>
+                    <button 
+                      className="btn-secondary" 
+                      style={{ padding: '6px 12px', fontSize: 13 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/edit-budget/${exp.id}`);
+                      }}
+                    >
+                      ✏️ Edit
+                    </button>
+                    <button 
+                      className="btn-danger" 
+                      style={{ padding: '6px 12px', fontSize: 13 }}
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (window.confirm('Are you sure you want to delete this budget?')) {
+                          const { error } = await supabase.from('expenses').delete().eq('id', exp.id);
+                          if (error) {
+                            alert('Delete failed: ' + error.message);
+                          } else {
+                            setExpenses(prev => prev.filter(item => item.id !== exp.id));
+                          }
+                        }
+                      }}
+                    >
+                      🗑️ Delete
+                    </button>
+                  </div>
+                  <div className={styles.tableWrapper}>
+                    <table className={styles.table}>
+                          <thead><tr><th>#</th><th>Product</th><th>Qty</th><th>Amount (Rs.)</th></tr></thead>
+                          <tbody>
+                            {mainRows.length === 0 ? (
+                              <tr><td colSpan={4} style={{ color: 'var(--text-light)', fontStyle: 'italic' }}>No main items (per head only)</td></tr>
+                            ) : (
+                              mainRows.map((item, idx) => (
+                                <tr key={item.id}>
+                                  <td>{idx + 1}</td>
+                                  <td>{item.product_name}</td>
+                                  <td>{item.quantity == null || item.quantity === '' ? '—' : item.quantity}</td>
+                                  <td>{formatLkr(item.amount)}</td>
+                                </tr>
+                              ))
+                            )}
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <td colSpan={3} style={{ fontWeight: 700, color: 'var(--primary)', textAlign: 'right' }}>Total</td>
+                              <td style={{ fontWeight: 700, color: 'var(--primary)' }}>{formatLkr(exp.total_amount)}</td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                  </div>
                       {perHeadGroups.length > 0 && (
                         <div style={{ marginTop: 20 }}>
                           <h4 style={{ margin: '0 0 10px', fontSize: 15, color: 'var(--primary)' }}>Per head budget</h4>
                           {perHeadGroups.map((g) => (
                             <div key={g.for_user_id} style={{ marginBottom: 16 }}>
                               <p style={{ fontWeight: 700, margin: '0 0 8px', color: 'var(--primary-light)', fontSize: 14 }}>{g.name}</p>
-                              <table className={styles.table}>
-                                <thead><tr><th>#</th><th>Product</th><th>Qty</th><th>Amount (Rs.)</th></tr></thead>
-                                <tbody>
-                                  {g.items.map((item, idx) => (
-                                    <tr key={item.id}>
-                                      <td>{idx + 1}</td>
-                                      <td>{item.product_name}</td>
-                                      <td>{item.quantity == null || item.quantity === '' ? '—' : item.quantity}</td>
-                                      <td>{formatLkr(item.amount)}</td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
+                              <div className={styles.tableWrapper}>
+                                <table className={styles.table}>
+                                  <thead><tr><th>#</th><th>Product</th><th>Qty</th><th>Amount (Rs.)</th></tr></thead>
+                                  <tbody>
+                                    {g.items.map((item, idx) => (
+                                      <tr key={item.id}>
+                                        <td>{idx + 1}</td>
+                                        <td>{item.product_name}</td>
+                                        <td>{item.quantity == null || item.quantity === '' ? '—' : item.quantity}</td>
+                                        <td>{formatLkr(item.amount)}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
                           ))}
                         </div>

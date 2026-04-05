@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { supabase } from '../supabaseClient'
+import { useNavigate, useParams } from 'react-router-dom'
+import { supabase } from '../js/supabaseClient'
 import Navbar from '../components/Navbar'
 import styles from './AddBudgetPage.module.css'
 import {
@@ -10,12 +10,14 @@ import {
   lineHasAnyData,
   parsePerHeadBlocks,
   parseMainItems,
-} from '../budgetFormUtils'
-import { formatLkr } from '../formatMoney'
+} from '../js/budgetFormUtils'
+import { formatLkr } from '../js/formatMoney'
 
 export default function AddBudgetPage() {
   const navigate = useNavigate()
+  const { id: editId } = useParams()
   const user = JSON.parse(localStorage.getItem('homies_user') || '{}')
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [usersList, setUsersList] = useState([])
   const [items, setItems] = useState([emptyItem()])
   const [perHeadBlocks, setPerHeadBlocks] = useState([])
@@ -34,6 +36,29 @@ export default function AddBudgetPage() {
     })()
     return () => { cancelled = true }
   }, [])
+
+  useEffect(() => {
+    if (!editId) return
+    let cancelled = false
+    ;(async () => {
+      const { data: exp } = await supabase.from('expenses').select('*, expense_items(*), expense_per_head_items(*)').eq('id', editId).single()
+      if (cancelled || !exp) return
+      setDate(exp.date || new Date().toISOString().split('T')[0])
+      if (exp.expense_items && exp.expense_items.length > 0) {
+        setItems(exp.expense_items.map(i => ({ product_name: i.product_name, quantity: i.quantity || '', amount: i.amount })))
+      }
+      
+      if (exp.expense_per_head_items && exp.expense_per_head_items.length > 0) {
+        const phMap = {}
+        for (const i of exp.expense_per_head_items) {
+          if (!phMap[i.for_user_id]) phMap[i.for_user_id] = []
+          phMap[i.for_user_id].push({ product_name: i.product_name, quantity: i.quantity || '', amount: i.amount })
+        }
+        setPerHeadBlocks(Object.keys(phMap).map(userId => ({ for_user_id: userId, items: phMap[userId] })))
+      }
+    })()
+    return () => { cancelled = true }
+  }, [editId])
 
   const userNameById = Object.fromEntries(usersList.map((u) => [u.id, u.username]))
 
@@ -93,6 +118,14 @@ export default function AddBudgetPage() {
   function handlePreview(e) {
     e.preventDefault()
     setError('')
+
+    // Date validation: Prevent past dates for NEW budgets
+    const today = new Date().toISOString().split('T')[0]
+    if (!editId && date < today) {
+      setError('You cannot set a budget for a past date.')
+      return
+    }
+
     const ph = parsePerHeadBlocks(perHeadBlocks)
     if (!ph.ok) { setError(ph.error); return }
     const main = parseMainItems(items)
@@ -110,18 +143,25 @@ export default function AddBudgetPage() {
     setSaving(true)
     setError('')
     try {
-      const today = new Date().toISOString().split('T')[0]
-      const { data: expense, error: expErr } = await supabase
-        .from('expenses')
-        .insert({ user_id: user.id, date: today, total_amount: expenseTotal, is_confirmed: true })
-        .select()
-        .single()
-
-      if (expErr) throw expErr
+      let expenseId = editId
+      if (editId) {
+        const { error: expUpdateErr } = await supabase.from('expenses').update({ date, total_amount: expenseTotal }).eq('id', editId)
+        if (expUpdateErr) throw expUpdateErr
+        await supabase.from('expense_items').delete().eq('expense_id', editId)
+        await supabase.from('expense_per_head_items').delete().eq('expense_id', editId)
+      } else {
+        const { data: expense, error: expErr } = await supabase
+          .from('expenses')
+          .insert({ user_id: user.id, date, total_amount: expenseTotal, is_confirmed: true })
+          .select()
+          .single()
+        if (expErr) throw expErr
+        expenseId = expense.id
+      }
 
       if (parsedMainItems.length > 0) {
         const expenseItems = parsedMainItems.map((i) => ({
-          expense_id: expense.id,
+          expense_id: expenseId,
           product_name: i.product_name.trim(),
           quantity: qtyToDb(i.quantity),
           amount: parseFloat(i.amount),
@@ -135,7 +175,7 @@ export default function AddBudgetPage() {
         for (const block of parsedPerHead) {
           for (const i of block.items) {
             perHeadRows.push({
-              expense_id: expense.id,
+              expense_id: expenseId,
               for_user_id: block.for_user_id,
               product_name: i.product_name.trim(),
               quantity: qtyToDb(i.quantity),
@@ -148,7 +188,7 @@ export default function AddBudgetPage() {
       }
 
       setSuccess(true)
-      setTimeout(() => navigate('/'), 1800)
+      setTimeout(() => navigate('/history'), 1800)
     } catch (err) {
       setError('Save failed: ' + err.message)
       setSaving(false)
@@ -181,32 +221,34 @@ export default function AddBudgetPage() {
             {parsedMainItems.length === 0 ? (
               <p style={{ color: 'var(--text-light)', marginBottom: 16 }}>No lines in Items — total below uses Per head only.</p>
             ) : (
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Product</th>
-                    <th>Qty</th>
-                    <th>Amount (Rs.)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {parsedMainItems.map((item, idx) => (
-                    <tr key={idx}>
-                      <td>{idx + 1}</td>
-                      <td>{item.product_name}</td>
-                      <td>{item.quantity === '' || item.quantity == null ? '—' : item.quantity}</td>
-                      <td>{formatLkr(item.amount)}</td>
+              <div className={styles.tableWrapper}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Product</th>
+                      <th>Qty</th>
+                      <th>Amount (Rs.)</th>
                     </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td colSpan={3} style={{ fontWeight: 700, textAlign: 'right', color: 'var(--primary)' }}>Subtotal</td>
-                    <td style={{ fontWeight: 700, color: 'var(--primary)' }}>{formatLkr(mainSavedTotal)}</td>
-                  </tr>
-                </tfoot>
-              </table>
+                  </thead>
+                  <tbody>
+                    {parsedMainItems.map((item, idx) => (
+                      <tr key={idx}>
+                        <td>{idx + 1}</td>
+                        <td>{item.product_name}</td>
+                        <td>{item.quantity === '' || item.quantity == null ? '—' : item.quantity}</td>
+                        <td>{formatLkr(item.amount)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colSpan={3} style={{ fontWeight: 700, textAlign: 'right', color: 'var(--primary)' }}>Subtotal</td>
+                      <td style={{ fontWeight: 700, color: 'var(--primary)' }}>{formatLkr(mainSavedTotal)}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
             )}
             <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--primary)', marginTop: 8 }}>
               Day total (saved):
@@ -227,26 +269,28 @@ export default function AddBudgetPage() {
                         )
                       </span>
                     </p>
-                    <table className={styles.table}>
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Product</th>
-                          <th>Qty</th>
-                          <th>Amount (Rs.)</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {block.items.map((item, idx) => (
-                          <tr key={idx}>
-                            <td>{idx + 1}</td>
-                            <td>{item.product_name}</td>
-                            <td>{item.quantity === '' || item.quantity == null ? '—' : item.quantity}</td>
-                            <td>{formatLkr(item.amount)}</td>
+                    <div className={styles.tableWrapper}>
+                      <table className={styles.table}>
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Amount (Rs.)</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {block.items.map((item, idx) => (
+                            <tr key={idx}>
+                              <td>{idx + 1}</td>
+                              <td>{item.product_name}</td>
+                              <td>{item.quantity === '' || item.quantity == null ? '—' : item.quantity}</td>
+                              <td>{formatLkr(item.amount)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 ))}
                 <p style={{ fontSize: 14, color: 'var(--text-light)', marginTop: 8 }}>
@@ -274,9 +318,19 @@ export default function AddBudgetPage() {
     <div>
       <Navbar />
       <div className="page-container">
-        <h2 className="page-title">➕ Add Today&apos;s Budget</h2>
+        <h2 className="page-title">{editId ? '✏️ Edit Budget' : '➕ Add Budget'}</h2>
         <div className="card">
           <form onSubmit={handlePreview}>
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ display: 'block', fontWeight: 600, marginBottom: 8, color: 'var(--primary)' }}>Date</label>
+              <input 
+                type="date" 
+                value={date} 
+                min={!editId ? new Date().toISOString().split('T')[0] : undefined} 
+                onChange={(e) => setDate(e.target.value)} 
+                style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-color)' }} 
+              />
+            </div>
             <div className={styles.itemsHeader}>
               <span>Items (optional if you use Per head only)</span>
               <button type="button" className="btn-secondary" style={{ padding: '7px 14px', fontSize: 13 }} onClick={addItem}>
@@ -294,8 +348,7 @@ export default function AddBudgetPage() {
                 />
                 <input
                   placeholder="Qty (optional)"
-                  type="number"
-                  min="1"
+                  type="text"
                   value={item.quantity}
                   onChange={(e) => updateItem(idx, 'quantity', e.target.value)}
                   style={{ flex: 1 }}
@@ -357,8 +410,7 @@ export default function AddBudgetPage() {
                       />
                       <input
                         placeholder="Qty (optional)"
-                        type="number"
-                        min="1"
+                        type="text"
                         value={item.quantity}
                         onChange={(e) => updatePerHeadItem(bi, ii, 'quantity', e.target.value)}
                         style={{ flex: 1 }}

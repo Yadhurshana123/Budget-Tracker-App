@@ -97,3 +97,49 @@
   background: white;
   color: var(--text);
 }
+
+@media (max-width: 600px) {
+  .expHeader {
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .expDate {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  .expTotal {
+    font-size: 16px;
+  }
+  .expBody {
+    padding: 16px 14px;
+  }
+  .editRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .editRow button {
+    width: 100%;
+    padding: 12px;
+  }
+  .tableWrapper {
+    overflow-x: auto;
+    margin: 0 -14px;
+    padding: 0 14px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table {
+    min-width: 460px;
+    font-size: 13px;
+  }
+  .perHeadEditTop {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .perHeadEditTop button {
+    width: 100%;
+  }
+}
